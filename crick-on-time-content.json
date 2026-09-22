@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "hero": {
+    "eyebrow": "LIVE CRICKET, ZERO DELAY",
+    "autoPlayMs": 5500,
+    "slides": [
+      {
+        "id": "hero-1",
+        "landscapeImage": "https://images.slivcdn.com/videoasset_images/manage_file/1000024467/179007409425890_ENGvsSL26_odi_masthead_large_v3.jpg",
+        "portraitImage": "https://images.slivcdn.com/videoasset_images/manage_file/1000024408/1790022398960512_ENGvsSL26_1odi_live_portrait_thumb.jpg",
+        "titleHtml": "Every Ball.<br>Every Match.<br><span class=\"accent\">On Time.</span>",
+        "subtitle": "Stream international and domestic cricket the moment it happens — HD multi-angle feeds, ball-by-ball data, no buffering excuses.",
+        "ctaText": "Start Watching Free",
+        "ctaHref": "#plans",
+        "secondaryCtaText": "See What's Live",
+        "secondaryCtaHref": "#matches"
+      },
+      {
+        "id": "hero-2",
+        "landscapeImage": "",
+        "portraitImage": "",
+        "titleHtml": "Feel Every<br>Seam.<br><span class=\"accent\">Every Swing.</span>",
+        "subtitle": "Multi-camera angles and slow-motion replays put you closer to the pitch than the stands ever could.",
+        "ctaText": "See Live Angles",
+        "ctaHref": "#matches",
+        "secondaryCtaText": "See What's Live",
+        "secondaryCtaHref": "#matches"
+      },
+      {
+        "id": "hero-3",
+        "landscapeImage": "",
+        "portraitImage": "",
+        "titleHtml": "One Platform.<br><span class=\"accent\">Every</span><br>Tournament.",
+        "subtitle": "From bilateral series to franchise leagues and ICC events — one schedule, one subscription, zero switching apps.",
+        "ctaText": "View Full Schedule",
+        "ctaHref": "#schedule",
+        "secondaryCtaText": "See What's Live",
+        "secondaryCtaHref": "#matches"
+      }
+    ]
+  },
+  "matches": [
+    {
+      "id": "match-1",
+      "time": "LIVE",
+      "teams": "India",
+      "details": "vs Australia · 2nd ODI",
+      "venue": "Wankhede, Mumbai",
+      "status": "34.2 OV",
+      "statusType": "live",
+      "actionText": "Watch",
+      "actionHref": "#plans"
+    },
+    {
+      "id": "match-2",
+      "time": "18:30",
+      "teams": "England",
+      "details": "vs South Africa · Test, Day 3",
+      "venue": "Lord's, London",
+      "status": "Starts in 2h 10m",
+      "statusType": "upcoming",
+      "actionText": "Remind Me",
+      "actionHref": "#plans"
+    },
+    {
+      "id": "match-3",
+      "time": "21:00",
+      "teams": "Titans",
+      "details": "vs Falcons · League T20",
+      "venue": "Kensington Oval",
+      "status": "Starts in 4h 40m",
+      "statusType": "upcoming",
+      "actionText": "Remind Me",
+      "actionHref": "#plans"
+    },
+    {
+      "id": "match-4",
+      "time": "Tomorrow",
+      "teams": "Pakistan",
+      "details": "vs New Zealand · 1st T20I",
+      "venue": "Gaddafi Stadium",
+      "status": "09:30 IST",
+      "statusType": "upcoming",
+      "actionText": "Remind Me",
+      "actionHref": "#plans"
+    }
+  ]
+}
