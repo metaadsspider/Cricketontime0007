@@ -11,9 +11,9 @@
         "titleHtml": "England<br>VS Sri Lanka<br><span class=\"accent\">Watch Now</span>",
         "subtitle": "Cricket",
         "ctaText": "Watch Now",
-        "ctaHref": "#plans",
+        "ctaHref": "https://t.me/+u4SlkLZNQl9hZjQ1",
         "secondaryCtaText": "Join Tg",
-        "secondaryCtaHref": "#matches"
+        "secondaryCtaHref": "https://t.me/+u4SlkLZNQl9hZjQ1"
       },
       {
         "id": "hero-2",
@@ -22,9 +22,9 @@
         "titleHtml": "England<br>VS Sri Lanka<br><span class=\"accent\">Watch Now</span>",
         "subtitle": "Cricket",
         "ctaText": "Watch Now",
-        "ctaHref": "#plans",
+        "ctaHref": "https://t.me/+u4SlkLZNQl9hZjQ1",
         "secondaryCtaText": "Join Tg",
-        "secondaryCtaHref": "#matches"
+        "secondaryCtaHref": "https://t.me/+u4SlkLZNQl9hZjQ1"
       },
       {
         "id": "hero-3",
@@ -33,9 +33,10 @@
         "titleHtml": "England<br>VS Sri Lanka<br><span class=\"accent\">Watch Now</span>",
         "subtitle": "Cricket",
         "ctaText": "Watch Now",
-        "ctaHref": "#plans",
+        "ctaHref": "https://t.me/+u4SlkLZNQl9hZjQ1",
         "secondaryCtaText": "Join Tg",
-        "secondaryCtaHref": "#matches"
+        "secondaryCtaHref": "https://t.me/+u4SlkLZNQl9hZjQ1"
       }
     ]
   }
+}
