@@ -8,9 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ==========================================================
-   DESIGN TOKENS
-========================================================== */
 :root{
   --void:#0A0E0C;
   --ink:#F2F1E9;
@@ -33,9 +30,7 @@ img,svg{ max-width:100%; display:block; }
 .wrap{ max-width:1240px; margin:0 auto; padding:0 32px; }
 .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.01em; line-height:0.92; }
 
-/* ==========================================================
-   NAV BAR
-========================================================== */
+/* ---- NAV ---- */
 header.nav{
   position:fixed; top:0; left:0; right:0; z-index:100;
   padding-top: env(safe-area-inset-top, 0px);
@@ -69,6 +64,7 @@ header.nav.scrolled{
 .brand-name b{ color: var(--flood); font-weight:400; }
 .nav-cta{ display:flex; align-items:center; gap:14px; }
 
+/* ---- BUTTONS ---- */
 .btn{
   display:inline-flex; align-items:center; gap:8px;
   font-family:'Inter',sans-serif; font-weight:700; font-size:14px;
@@ -79,10 +75,10 @@ header.nav.scrolled{
 .btn:active{ transform: translateY(1px); }
 .btn-primary{ background: var(--flood); color:#0A0E0C; }
 .btn-primary:hover{ background:#E4FF86; }
+.btn-ghost{ background:transparent; color: var(--ink); border-color: rgba(242,241,233,0.3); }
+.btn-ghost:hover{ border-color: var(--ink); }
 
-/* ==========================================================
-   HERO + AUTO SLIDER
-========================================================== */
+/* ---- HERO SLIDER ---- */
 .hero{
   position:relative; height:100svh; min-height:560px; width:100%;
   overflow:hidden;
@@ -96,7 +92,7 @@ header.nav.scrolled{
 .slide.active{ opacity:1; visibility:visible; z-index:1; }
 
 .visual-landscape,
-.visual-portrait{ position:absolute; inset:0; }
+.visual-portrait{ position:absolute; inset:0; background-size:cover; background-position:center; }
 .visual-landscape{ display:block; }
 .visual-portrait{ display:none; }
 @media (orientation: portrait){
@@ -113,40 +109,6 @@ header.nav.scrolled{
   .slide-scrim{
     background: linear-gradient(to top, rgba(6,9,7,0.96) 0%, rgba(6,9,7,0.55) 45%, rgba(6,9,7,0.25) 75%);
   }
-}
-
-/* gradient fills (used when no image is supplied via JSON) */
-.bg-1.visual-landscape{
-  background:
-    radial-gradient(1100px 600px at 78% -10%, rgba(214,255,92,0.16), transparent 60%),
-    radial-gradient(700px 500px at 92% 8%, rgba(200,16,46,0.18), transparent 60%),
-    linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
-}
-.bg-2.visual-landscape{
-  background:
-    radial-gradient(60% 70% at 82% 45%, rgba(200,16,46,0.35), transparent 65%),
-    linear-gradient(150deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
-}
-.bg-3.visual-landscape{
-  background:
-    radial-gradient(900px 500px at 15% 100%, rgba(214,255,92,0.10), transparent 60%),
-    linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
-}
-.bg-1.visual-portrait{
-  background:
-    radial-gradient(700px 500px at 50% -5%, rgba(214,255,92,0.18), transparent 60%),
-    radial-gradient(500px 400px at 50% 15%, rgba(200,16,46,0.16), transparent 60%),
-    linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
-}
-.bg-2.visual-portrait{
-  background:
-    radial-gradient(70% 40% at 50% 30%, rgba(200,16,46,0.35), transparent 65%),
-    linear-gradient(200deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
-}
-.bg-3.visual-portrait{
-  background:
-    radial-gradient(600px 700px at 50% 100%, rgba(214,255,92,0.12), transparent 60%),
-    linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
 }
 
 .slide-svg{ position:absolute; inset:0; width:100%; height:100%; }
@@ -198,7 +160,6 @@ header.nav.scrolled{
   .wrap{ padding:0 20px; }
   .slide-index{ left:20px; bottom:24px; }
 }
-
 @media (prefers-reduced-motion: reduce){
   .slide{ transition:none; }
 }
@@ -206,9 +167,6 @@ header.nav.scrolled{
 </head>
 <body>
 
-<!-- =========================================================
-     NAV BAR
-========================================================= -->
 <header class="nav" id="siteNav">
   <div class="wrap nav-row">
     <div class="brand">
@@ -221,102 +179,38 @@ header.nav.scrolled{
   </div>
 </header>
 
-<!-- =========================================================
-     HERO + AUTO SLIDER
-========================================================= -->
 <section class="hero" id="home">
 
   <!-- SLIDE 1 -->
   <div class="slide active" data-slide="0">
-    <div class="visual-landscape bg-1">
-      <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <g opacity="0.5">
-          <polygon points="1010,900 1060,120 1080,120 1160,900" fill="#D6FF5C" opacity="0.05"/>
-          <polygon points="1160,900 1200,180 1216,180 1300,900" fill="#D6FF5C" opacity="0.04"/>
-          <polygon points="1300,900 1330,220 1344,220 1420,900" fill="#D6FF5C" opacity="0.035"/>
-        </g>
-        <circle cx="1070" cy="110" r="5" fill="#D6FF5C"/>
-        <circle cx="1208" cy="170" r="4" fill="#D6FF5C" opacity="0.8"/>
-        <circle cx="1337" cy="210" r="3.5" fill="#D6FF5C" opacity="0.7"/>
-        <path d="M0 780 C 300 760, 700 800, 1440 760 L1440 900 L0 900 Z" fill="#060907" opacity="0.9"/>
-        <path d="M0 800 C 320 785, 680 815, 1440 785" stroke="#D6FF5C" stroke-width="1" opacity="0.18" fill="none"/>
-      </svg>
-    </div>
-    <div class="visual-portrait bg-1">
-      <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <g opacity="0.5">
-          <polygon points="330,1400 380,80 420,80 470,1400" fill="#D6FF5C" opacity="0.05"/>
-          <polygon points="230,1400 300,140 340,140 410,1400" fill="#D6FF5C" opacity="0.04"/>
-          <polygon points="430,1400 460,140 500,140 570,1400" fill="#D6FF5C" opacity="0.04"/>
-        </g>
-        <circle cx="400" cy="70" r="6" fill="#D6FF5C"/>
-        <circle cx="320" cy="130" r="4" fill="#D6FF5C" opacity="0.8"/>
-        <circle cx="480" cy="130" r="4" fill="#D6FF5C" opacity="0.7"/>
-        <path d="M0 1180 C 200 1150, 600 1210, 800 1170 L800 1400 L0 1400 Z" fill="#060907" opacity="0.9"/>
-        <path d="M0 1200 C 220 1180, 580 1230, 800 1190" stroke="#D6FF5C" stroke-width="1" opacity="0.18" fill="none"/>
-      </svg>
-    </div>
+    <div class="visual-landscape"></div>
+    <div class="visual-portrait"></div>
     <div class="slide-scrim"></div>
   </div>
 
   <!-- SLIDE 2 -->
   <div class="slide" data-slide="1">
-    <div class="visual-landscape bg-2">
-      <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="1180" cy="420" r="360" fill="none" stroke="#C8102E" stroke-width="2" opacity="0.55"/>
-        <path d="M900 300 Q1180 60 1460 300" stroke="#F2F1E9" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="2 10" stroke-linecap="round"/>
-        <path d="M900 540 Q1180 780 1460 540" stroke="#F2F1E9" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="2 10" stroke-linecap="round"/>
-        <circle cx="1180" cy="420" r="230" fill="none" stroke="#C8102E" stroke-width="1" opacity="0.3"/>
-      </svg>
-    </div>
-    <div class="visual-portrait bg-2">
-      <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="400" cy="500" r="320" fill="none" stroke="#C8102E" stroke-width="2" opacity="0.55"/>
-        <path d="M180 320 Q400 100 620 320" stroke="#F2F1E9" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="2 10" stroke-linecap="round"/>
-        <path d="M180 680 Q400 900 620 680" stroke="#F2F1E9" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="2 10" stroke-linecap="round"/>
-        <circle cx="400" cy="500" r="200" fill="none" stroke="#C8102E" stroke-width="1" opacity="0.3"/>
-      </svg>
-    </div>
+    <div class="visual-landscape"></div>
+    <div class="visual-portrait"></div>
     <div class="slide-scrim"></div>
   </div>
 
   <!-- SLIDE 3 -->
   <div class="slide" data-slide="2">
-    <div class="visual-landscape bg-3">
-      <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <line x1="820" y1="0" x2="820" y2="900" stroke="#F2F1E9" stroke-width="1.5" opacity="0.15"/>
-        <line x1="760" y1="0" x2="760" y2="900" stroke="#F2F1E9" stroke-width="1" opacity="0.1"/>
-        <line x1="880" y1="0" x2="880" y2="900" stroke="#F2F1E9" stroke-width="1" opacity="0.1"/>
-        <rect x="790" y="60" width="60" height="10" fill="#D6FF5C" opacity="0.5"/>
-        <rect x="790" y="820" width="60" height="10" fill="#D6FF5C" opacity="0.5"/>
-        <circle cx="1250" cy="200" r="2" fill="#D6FF5C"/>
-        <circle cx="1310" cy="340" r="2" fill="#D6FF5C" opacity="0.7"/>
-        <circle cx="1180" cy="470" r="2" fill="#D6FF5C" opacity="0.5"/>
-      </svg>
-    </div>
-    <div class="visual-portrait bg-3">
-      <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0" y1="460" x2="800" y2="460" stroke="#F2F1E9" stroke-width="1.5" opacity="0.15"/>
-        <line x1="0" y1="400" x2="800" y2="400" stroke="#F2F1E9" stroke-width="1" opacity="0.1"/>
-        <line x1="0" y1="520" x2="800" y2="520" stroke="#F2F1E9" stroke-width="1" opacity="0.1"/>
-        <rect x="370" y="430" width="10" height="60" fill="#D6FF5C" opacity="0.5"/>
-        <rect x="420" y="430" width="10" height="60" fill="#D6FF5C" opacity="0.5"/>
-        <circle cx="250" cy="700" r="2.5" fill="#D6FF5C"/>
-        <circle cx="520" cy="800" r="2.5" fill="#D6FF5C" opacity="0.7"/>
-        <circle cx="380" cy="900" r="2.5" fill="#D6FF5C" opacity="0.5"/>
-      </svg>
-    </div>
+    <div class="visual-landscape"></div>
+    <div class="visual-portrait"></div>
     <div class="slide-scrim"></div>
   </div>
 
-  <!-- text overlay — content comes from crick-on-time-content.json -->
+  <!-- text overlay — everything comes from crick-on-time-content.json -->
   <div class="hero-content wrap">
     <div class="hero-inner">
-      <div class="eyebrow"><span class="seam-line"></span> <span id="slideEyebrow">LIVE CRICKET, ZERO DELAY</span></div>
+      <div class="eyebrow"><span class="seam-line"></span> <span id="slideEyebrow">LIVE CRICKET, FREE</span></div>
       <h1 class="hero-title display" id="slideTitle"></h1>
       <p class="hero-sub" id="slideSub"></p>
       <div class="hero-actions">
-        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary" id="slideCta">Join for More</a>
+        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary" id="slideCta">Watch Now</a>
+        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-ghost" id="slideSecondaryCta">Join Tg</a>
       </div>
     </div>
   </div>
@@ -332,30 +226,8 @@ header.nav.scrolled{
 </section>
 
 <script>
-  /* =====================================================
-     TELEGRAM LINK — used for the hero CTA on every slide
-  ====================================================== */
-  const TELEGRAM_URL = 'https://t.me/+u4SlkLZNQl9hZjQ1';
-  const TELEGRAM_TEXT = 'Join for More';
-
-  /* ---- Fallback content (shown if the JSON fails to load) ---- */
-  const DEFAULT_SLIDES = [
-    {
-      eyebrow: 'LIVE CRICKET, ZERO DELAY',
-      titleHtml: 'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>',
-      subtitle: 'Stream every international and T20 league match in crisp HD. Join our Telegram channel and get live links the moment play begins.'
-    },
-    {
-      eyebrow: 'HD STREAMS, EVERY MATCH',
-      titleHtml: 'No Buffer.<br>No Blackout.<br><span class="accent">All Matches.</span>',
-      subtitle: 'From the first over to the final ball — working stream links for every game, delivered straight to your phone.'
-    },
-    {
-      eyebrow: 'JOIN FREE, WATCH INSTANTLY',
-      titleHtml: 'Your Team.<br>Live Now.<br><span class="accent">Tap Join.</span>',
-      subtitle: 'No sign-ups, no paywalls. Join the channel and never miss a single match again.'
-    }
-  ];
+  const TELEGRAM_URL  = 'https://t.me/+u4SlkLZNQl9hZjQ1';
+  const DEFAULT_TEXT  = 'Join for More';
 
   const slides    = document.querySelectorAll('.slide');
   const dots      = document.querySelectorAll('.dot-btn');
@@ -364,13 +236,14 @@ header.nav.scrolled{
   const subEl     = document.getElementById('slideSub');
   const eyebrowEl = document.getElementById('slideEyebrow');
   const ctaEl     = document.getElementById('slideCta');
+  const secCtaEl  = document.getElementById('slideSecondaryCta');
 
-  let content = DEFAULT_SLIDES;
+  let content = [];
   let current = 0;
   let timer   = null;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- apply JSON images to each slide (landscape + portrait) ---- */
+  /* ---- put JSON images onto each slide ---- */
   function applySlideImages(slideData){
     slides.forEach((slide, index) => {
       const item = slideData[index];
@@ -379,25 +252,19 @@ header.nav.scrolled{
       const landscape = slide.querySelector('.visual-landscape');
       const portrait  = slide.querySelector('.visual-portrait');
 
-      if (item.landscapeImage) {
-        landscape.style.backgroundImage = `url("${item.landscapeImage}")`;
-        landscape.style.backgroundSize  = 'cover';
-        landscape.style.backgroundPosition = 'center';
+      if (item.landscapeImage){
+        landscape.style.backgroundImage = 'url("' + item.landscapeImage + '")';
         const svg = landscape.querySelector('svg');
-        if (svg) svg.style.display = 'none';
+        if (svg) svg.remove();
       }
-
-      if (item.portraitImage) {
-        portrait.style.backgroundImage = `url("${item.portraitImage}")`;
-        portrait.style.backgroundSize  = 'cover';
-        portrait.style.backgroundPosition = 'center';
+      if (item.portraitImage){
+        portrait.style.backgroundImage = 'url("' + item.portraitImage + '")';
         const svg = portrait.querySelector('svg');
-        if (svg) svg.style.display = 'none';
+        if (svg) svg.remove();
       }
     });
   }
 
-  /* ---- render a slide's text content ---- */
   function goTo(i){
     slides[current].classList.remove('active');
     dots[current].classList.remove('active');
@@ -410,32 +277,31 @@ header.nav.scrolled{
     slideNum.textContent =
       '0' + (current + 1) + ' / ' + String(slides.length).padStart(2, '0');
 
-    const slide = content[current] || {};
+    const slide = content[current % (content.length || 1)] || {};
 
-    eyebrowEl.textContent = slide.eyebrow || 'LIVE CRICKET, ZERO DELAY';
-    titleEl.innerHTML     = slide.titleHtml || slide.title || DEFAULT_SLIDES[current % DEFAULT_SLIDES.length].titleHtml;
-    subEl.textContent     = slide.subtitle || slide.sub || DEFAULT_SLIDES[current % DEFAULT_SLIDES.length].subtitle;
+    eyebrowEl.textContent = slide.eyebrow || 'LIVE CRICKET, FREE';
+    titleEl.innerHTML     = slide.titleHtml || slide.title || 'Live Cricket<br><span class="accent">On Time.</span>';
+    subEl.textContent     = slide.subtitle || slide.sub || '';
 
-    /* hero CTA always points to the Telegram channel */
-    ctaEl.textContent = slide.ctaText || TELEGRAM_TEXT;
-    ctaEl.href        = TELEGRAM_URL;
-    ctaEl.target      = '_blank';
-    ctaEl.rel         = 'noopener';
+    /* primary CTA — text & link from JSON, Telegram as fallback */
+    ctaEl.textContent = slide.ctaText || DEFAULT_TEXT;
+    ctaEl.href        = slide.ctaHref || TELEGRAM_URL;
+    ctaEl.target      = (ctaEl.href.startsWith('http')) ? '_blank' : '_self';
+
+    /* secondary CTA — text & link from JSON, Telegram as fallback */
+    secCtaEl.textContent = slide.secondaryCtaText || DEFAULT_TEXT;
+    secCtaEl.href        = slide.secondaryCtaHref || TELEGRAM_URL;
+    secCtaEl.target      = (secCtaEl.href.startsWith('http')) ? '_blank' : '_self';
   }
 
-  function next(){
-    goTo((current + 1) % slides.length);
-  }
+  function next(){ goTo((current + 1) % slides.length); }
 
   function startAuto(ms){
     if (reduceMotion) return;
     stopAuto();
     timer = setInterval(next, ms || 5500);
   }
-
-  function stopAuto(){
-    clearInterval(timer);
-  }
+  function stopAuto(){ clearInterval(timer); }
 
   dots.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -445,17 +311,19 @@ header.nav.scrolled{
     });
   });
 
-  /* show fallback immediately, then upgrade if JSON loads */
-  goTo(0);
-  startAuto(5500);
+  /* ---- nav scroll effect ---- */
+  const navEl = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => {
+    navEl.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
 
   /* =====================================================
      FETCH HERO CONTENT FROM crick-on-time-content.json
   ====================================================== */
   fetch('crick-on-time-content.json')
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Could not load crick-on-time-content.json (status ' + response.status + ')');
+      if (!response.ok){
+        throw new Error('HTTP ' + response.status + ' — file not found or unreachable');
       }
       return response.json();
     })
@@ -463,22 +331,47 @@ header.nav.scrolled{
       const hero = data.hero || {};
       const jsonSlides = Array.isArray(hero.slides) ? hero.slides : [];
 
-      if (jsonSlides.length) {
-        content = jsonSlides.map((s, i) => ({
-          eyebrow:   s.eyebrow   || hero.eyebrow || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].eyebrow,
-          titleHtml: s.titleHtml || s.title      || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].titleHtml,
-          subtitle:  s.subtitle  || s.sub        || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].subtitle,
-          landscapeImage: s.landscapeImage,
-          portraitImage:  s.portraitImage
-        }));
-
-        applySlideImages(content);
-        goTo(0);
-        startAuto(hero.autoPlayMs || 5500);
+      if (!jsonSlides.length){
+        throw new Error('JSON loaded but hero.slides is missing or empty');
       }
+
+      content = jsonSlides.map(s => ({
+        eyebrow:          s.eyebrow   || hero.eyebrow,
+        titleHtml:        s.titleHtml || s.title,
+        subtitle:         s.subtitle  || s.sub,
+        landscapeImage:   s.landscapeImage,
+        portraitImage:    s.portraitImage,
+        ctaText:          s.ctaText,
+        ctaHref:          s.ctaHref,
+        secondaryCtaText: s.secondaryCtaText,
+        secondaryCtaHref: s.secondaryCtaHref
+      }));
+
+      applySlideImages(content);
+
+      eyebrowEl.textContent = hero.eyebrow || content[0].eyebrow || 'LIVE CRICKET, FREE';
+      goTo(0);
+      startAuto(hero.autoPlayMs || 5500);
     })
     .catch(error => {
-      console.warn('Using fallback hero content:', error.message);
+      console.error('JSON load failed:', error);
+
+      /* visible red badge so you can SEE the reason on the page */
+      const badge = document.createElement('div');
+      badge.style.cssText =
+        'position:fixed;bottom:12px;right:12px;z-index:999;' +
+        'background:#C8102E;color:#fff;padding:10px 14px;font-size:12px;' +
+        'border-radius:4px;max-width:340px;font-family:monospace;line-height:1.5';
+      let hint = '';
+      if (location.protocol === 'file:'){
+        hint = '<br><b>You opened this via file:// — fetch() is blocked.</b> Use a local server (VS Code Live Server, or run: python -m http.server)';
+      }
+      badge.innerHTML = '<b>JSON error:</b> ' + error.message + hint;
+      document.body.appendChild(badge);
+
+      /* fallback text so the hero is never empty */
+      titleEl.innerHTML = 'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>';
+      subEl.textContent = 'Live cricket streams — join our Telegram for links.';
     });
 </script>
 
