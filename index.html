@@ -8,364 +8,218 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ==========================================================
+   DESIGN TOKENS
+========================================================== */
+:root{
+  --void:#0A0E0C;
+  --ink:#F2F1E9;
+  --ink-dim:#9AA79C;
+  --seam:#C8102E;
+  --flood:#D6FF5C;
+  --line: rgba(242,241,233,0.14);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*, *::before, *::after{ box-sizing: inherit; }
+html{ scroll-behavior: smooth; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  background: var(--void);
+  color: var(--ink);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+img,svg{ max-width:100%; display:block; }
+.wrap{ max-width:1240px; margin:0 auto; padding:0 32px; }
+.display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.01em; line-height:0.92; }
 
-  /* ==========================================================
-     DESIGN TOKENS — change colors/fonts once here, they cascade
-     everywhere else in the file.
-     ========================================================== */
-  :root{
-    --void:#0A0E0C;         /* page background, near-black pitch-at-night */
-    --panel:#10160F;        /* slightly lifted panel background (ticker, matches section) */
-    --panel-2:#161D14;
-    --ink:#F2F1E9;          /* primary text color (off-white) */
-    --ink-dim:#9AA79C;      /* secondary/muted text */
-    --seam:#C8102E;         /* cricket-ball leather red accent */
-    --flood:#D6FF5C;        /* floodlight lime accent (used for CTAs / highlights) */
-    --line: rgba(242,241,233,0.14); /* hairline dividers */
-    box-sizing:border-box;
-    /* keep content clear of notches / status bars on phones */
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  *,*::before,*::after{ box-sizing:inherit; }
-  html{ scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior:smooth; }
-  html,body{ height:100%; }
-  body{
-    margin:0;
-    background:var(--void);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    overflow-x:hidden; /* the ticker + slider use translateX, this prevents a horizontal scrollbar */
-  }
-  img,svg{ max-width:100%; display:block; }
-  .wrap{ max-width:1240px; margin:0 auto; padding:0 32px; } /* shared page-width container */
-  .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.01em; line-height:0.92; } /* broadcast/scoreboard display type */
+/* ==========================================================
+   NAV BAR
+========================================================== */
+header.nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: linear-gradient(to bottom, rgba(6,9,7,0.65), rgba(6,9,7,0));
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand-mark{
+  width:16px; height:16px; border-radius:50%;
+  background: var(--seam);
+  position:relative; flex-shrink:0;
+}
+.brand-mark::before,.brand-mark::after{
+  content:""; position:absolute; inset:2px;
+  border:1px solid rgba(242,241,233,0.85);
+  border-radius:50%;
+  clip-path: inset(0 50% 0 0);
+}
+.brand-mark::after{ clip-path: inset(0 0 0 50%); transform: rotate(35deg); }
+.brand-name{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.06em; color: var(--ink); }
+.brand-name b{ color: var(--flood); font-weight:400; }
 
-  /* ==========================================================
-     NAV BAR — flex row, transparent over the hero, turns into a
-     blurred glass bar once the page is scrolled.
-     ========================================================== */
-  header.nav{
-    position:fixed; top:0; left:0; right:0; z-index:100;
-    padding-top: env(safe-area-inset-top, 0px);
-    background: linear-gradient(to bottom, rgba(6,9,7,0.65), rgba(6,9,7,0)); /* transparent gradient by default */
-    transition: background .4s ease, backdrop-filter .4s ease, box-shadow .4s ease;
-  }
-  header.nav.scrolled{ /* class toggled by JS on scroll — see <script> at bottom */
-    background: rgba(9,13,10,0.86);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 1px 0 var(--line);
-  }
-  .nav-row{
-    /* FLEXBOX: logo left, links center-right, buttons far right — wraps gracefully */
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    height:78px;
-  }
-  .brand{ display:flex; align-items:center; gap:10px; } /* flex: logo dot + wordmark */
-  .brand-mark{
-    width:16px; height:16px; border-radius:50%;
-    background: var(--seam);
-    position:relative; flex:none; /* never shrink the logo dot */
-  }
-  .brand-mark::before,.brand-mark::after{ /* draws the cricket-ball seam curves on the logo dot */
-    content:""; position:absolute; inset:2px;
-    border:1px solid rgba(242,241,233,0.85);
-    border-radius:50%;
-    clip-path: inset(0 50% 0 0);
-  }
-  .brand-mark::after{ clip-path: inset(0 0 0 50%); transform:rotate(35deg); }
-  .brand-name{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.06em; color:var(--ink); }
-  .brand-name b{ color:var(--flood); font-weight:400; }
+.nav-row{
+  display:flex; align-items:center; justify-content:space-between;
+  height:78px;
+}
+.nav-cta{ display:flex; align-items:center; gap:14px; }
 
-  nav.links{
-    /* FLEXBOX: nav links laid out in a row with even gaps */
-    display:flex; align-items:center; gap:36px;
-  }
-  nav.links a{
-    color:var(--ink-dim); text-decoration:none; font-size:14px; font-weight:500;
-    letter-spacing:.01em;
-    transition:color .2s ease;
-  }
-  nav.links a:hover{ color:var(--ink); }
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:14px;
+  padding:12px 22px; border-radius:3px; border:1px solid transparent;
+  cursor:pointer; text-decoration:none; white-space:nowrap;
+  transition: transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn:active{ transform: translateY(1px); }
+.btn-primary{ background: var(--flood); color:#0A0E0C; }
+.btn-primary:hover{ background:#E4FF86; }
 
-  .btn{
-    /* FLEXBOX inside the button itself, so an icon/dot + label always stay centered */
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:'Inter',sans-serif; font-weight:700; font-size:14px;
-    padding:12px 22px; border-radius:3px; border:1px solid transparent;
-    cursor:pointer; text-decoration:none; white-space:nowrap;
-    transition: transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
-  }
-  .btn:active{ transform: translateY(1px); }
-  .btn-primary{ background:var(--flood); color:#0A0E0C; }
-  .btn-primary:hover{ background:#c3ee45; }
-  .btn-ghost{ background:transparent; color:var(--ink); border-color:rgba(242,241,233,0.3); }
-  .btn-ghost:hover{ border-color:var(--ink); }
-  .btn-live{ background:transparent; border:1px solid var(--seam); color:var(--ink); }
-  .btn-live .dot{ width:7px; height:7px; border-radius:50%; background:var(--seam); animation:pulse 1.6s infinite; }
-  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
+/* ==========================================================
+   HERO + AUTO SLIDER
+========================================================== */
+.hero{
+  position:relative; height:100svh; min-height:560px; width:100%;
+  overflow:hidden;
+  background: var(--void);
+}
+.slide{
+  position:absolute; inset:0;
+  opacity:0; visibility:hidden;
+  transition: opacity 1.1s ease;
+}
+.slide.active{ opacity:1; visibility:visible; z-index:1; }
 
-  .nav-cta{ display:flex; align-items:center; gap:14px; } /* FLEXBOX: the two right-hand nav buttons */
+.visual-landscape,
+.visual-portrait{ position:absolute; inset:0; }
+.visual-landscape{ display:block; }
+.visual-portrait{ display:none; }
+@media (orientation: portrait){
+  .visual-landscape{ display:none; }
+  .visual-portrait{ display:block; }
+}
 
-  /* ==========================================================
-     HERO SECTION + AUTO SLIDER
-     Each slide has TWO visual variants stacked in the markup:
-       .visual-landscape  -> shown on wide/landscape screens
-       .visual-portrait   -> shown on tall/portrait screens (phones held upright)
-     Only one is display:block at a time, switched by the
-     @media (orientation: ...) queries below — no JS needed for
-     that part, it re-optimizes itself automatically on rotate/resize.
-     ========================================================== */
-  .hero{
-    position:relative; height:100svh; min-height:560px; width:100%;
-    overflow:hidden;
-    background:var(--void);
-  }
-  .slide{
-    position:absolute; inset:0;
-    opacity:0; visibility:hidden;
-    transition: opacity 1.1s ease; /* crossfade between slides */
-  }
-  .slide.active{ opacity:1; visibility:visible; z-index:1; }
-
-  /* the two orientation-specific image layers inside every slide */
-  .visual-landscape,
-  .visual-portrait{ position:absolute; inset:0; }
-  .visual-landscape{ display:block; }
-  .visual-portrait{ display:none; }
-  @media (orientation: portrait){
-    /* narrow/tall viewport (most phones held normally) -> swap to the portrait art */
-    .visual-landscape{ display:none; }
-    .visual-portrait{ display:block; }
-  }
-
+.slide-scrim{
+  position:absolute; inset:0; z-index:1;
+  background: linear-gradient(100deg, rgba(8,11,9,0.94) 0%, rgba(8,11,9,0.78) 32%, rgba(8,11,9,0.35) 58%, rgba(8,11,9,0.15) 100%),
+              linear-gradient(to top, rgba(6,9,7,0.9) 0%, rgba(6,9,7,0) 32%);
+}
+@media (orientation: portrait){
   .slide-scrim{
-    /* dark gradient so hero text stays readable over any background art */
-    position:absolute; inset:0; z-index:1;
-    background: linear-gradient(100deg, rgba(8,11,9,0.94) 0%, rgba(8,11,9,0.78) 32%, rgba(8,11,9,0.35) 58%, rgba(8,11,9,0.15) 100%),
-                linear-gradient(to top, rgba(6,9,7,0.9) 0%, rgba(6,9,7,0) 32%);
+    background: linear-gradient(to top, rgba(6,9,7,0.96) 0%, rgba(6,9,7,0.55) 45%, rgba(6,9,7,0.25) 75%);
   }
-  @media (orientation: portrait){
-    /* on portrait, text sits lower (see .hero-content below) so scrim is heaviest at the bottom */
-    .slide-scrim{
-      background: linear-gradient(to top, rgba(6,9,7,0.96) 0%, rgba(6,9,7,0.55) 45%, rgba(6,9,7,0.25) 75%);
-    }
-  }
+}
 
-  /* ---- landscape background fills (wide horizontal compositions) ---- */
-  .bg-1.visual-landscape{
-    background:
-      radial-gradient(1100px 600px at 78% -10%, rgba(214,255,92,0.16), transparent 60%),
-      radial-gradient(700px 500px at 92% 8%, rgba(200,16,46,0.18), transparent 60%),
-      linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
-  }
-  .bg-2.visual-landscape{
-    background:
-      radial-gradient(60% 70% at 82% 45%, rgba(200,16,46,0.35), transparent 65%),
-      linear-gradient(150deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
-  }
-  .bg-3.visual-landscape{
-    background:
-      radial-gradient(900px 500px at 15% 100%, rgba(214,255,92,0.10), transparent 60%),
-      linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
-  }
+/* landscape background fills */
+.bg-1.visual-landscape{
+  background:
+    radial-gradient(1100px 600px at 78% -10%, rgba(214,255,92,0.16), transparent 60%),
+    radial-gradient(700px 500px at 92% 8%, rgba(200,16,46,0.18), transparent 60%),
+    linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
+}
+.bg-2.visual-landscape{
+  background:
+    radial-gradient(60% 70% at 82% 45%, rgba(200,16,46,0.35), transparent 65%),
+    linear-gradient(150deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
+}
+.bg-3.visual-landscape{
+  background:
+    radial-gradient(900px 500px at 15% 100%, rgba(214,255,92,0.10), transparent 60%),
+    linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
+}
+/* portrait background fills */
+.bg-1.visual-portrait{
+  background:
+    radial-gradient(700px 500px at 50% -5%, rgba(214,255,92,0.18), transparent 60%),
+    radial-gradient(500px 400px at 50% 15%, rgba(200,16,46,0.16), transparent 60%),
+    linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
+}
+.bg-2.visual-portrait{
+  background:
+    radial-gradient(70% 40% at 50% 30%, rgba(200,16,46,0.35), transparent 65%),
+    linear-gradient(200deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
+}
+.bg-3.visual-portrait{
+  background:
+    radial-gradient(600px 700px at 50% 100%, rgba(214,255,92,0.12), transparent 60%),
+    linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
+}
 
-  /* ---- portrait background fills (vertical compositions, art recentred) ---- */
-  .bg-1.visual-portrait{
-    background:
-      radial-gradient(700px 500px at 50% -5%, rgba(214,255,92,0.18), transparent 60%),
-      radial-gradient(500px 400px at 50% 15%, rgba(200,16,46,0.16), transparent 60%),
-      linear-gradient(180deg, #0B120E 0%, #0E1710 55%, #0A0E0C 100%);
-  }
-  .bg-2.visual-portrait{
-    background:
-      radial-gradient(70% 40% at 50% 30%, rgba(200,16,46,0.35), transparent 65%),
-      linear-gradient(200deg, #0C0E0B 0%, #14100E 45%, #0A0E0C 100%);
-  }
-  .bg-3.visual-portrait{
-    background:
-      radial-gradient(600px 700px at 50% 100%, rgba(214,255,92,0.12), transparent 60%),
-      linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
-  }
+.slide-svg{ position:absolute; inset:0; width:100%; height:100%; }
 
-  .slide-svg{ position:absolute; inset:0; width:100%; height:100%; }
+.hero-content{
+  position:relative; z-index:2; height:100%;
+  display:flex; align-items:center;
+}
+@media (orientation: portrait){
+  .hero-content{ align-items:flex-end; padding-bottom:110px; }
+}
+.hero-inner{ max-width:640px; padding-top:40px; }
+.eyebrow{
+  display:flex; align-items:center; gap:10px;
+  color: var(--flood); font-size:13px; font-weight:600;
+  letter-spacing:.04em; margin-bottom:18px;
+}
+.eyebrow .seam-line{ width:34px; height:1px; background: var(--flood); position:relative; }
+.eyebrow .seam-line::before{
+  content:""; position:absolute; inset:0;
+  background-image: repeating-linear-gradient(90deg, var(--flood) 0 3px, transparent 3px 7px);
+}
+.hero-title{ font-size: clamp(40px, 7vw, 96px); color: var(--ink); margin:0 0 22px 0; }
+.hero-title .accent{ color: var(--flood); }
+.hero-sub{
+  font-size:17px; line-height:1.6; color: var(--ink-dim);
+  max-width:480px; margin:0 0 34px 0;
+}
+.hero-actions{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
 
-  .hero-content{
-    position:relative; z-index:2; height:100%;
-    /* FLEXBOX: vertically centers the text block in landscape */
-    display:flex; align-items:center;
-  }
-  @media (orientation: portrait){
-    /* on phones, push the text block toward the lower half, above the dots/cue */
-    .hero-content{ align-items:flex-end; padding-bottom:110px; }
-  }
-  .hero-inner{ max-width:640px; padding-top:40px; }
-  .eyebrow{ display:flex; align-items:center; gap:10px; color:var(--flood); font-size:13px; font-weight:600; letter-spacing:.04em; margin-bottom:18px; }
-  .eyebrow .seam-line{ width:34px; height:1px; background: var(--flood); position:relative; }
-  .eyebrow .seam-line::before{ content:""; position:absolute; inset:0; background-image: repeating-linear-gradient(90deg, var(--flood) 0 3px, transparent 3px 7px); }
-  .hero-title{ font-size: clamp(40px, 7vw, 96px); color:var(--ink); margin:0 0 22px 0; }
-  .hero-title .accent{ color:var(--flood); }
-  .hero-sub{ font-size:17px; line-height:1.6; color:var(--ink-dim); max-width:480px; margin:0 0 34px 0; }
-  .hero-actions{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; } /* FLEXBOX: buttons wrap on narrow screens instead of overflowing */
+.slide-index{
+  position:absolute; z-index:3; left:32px; bottom:32px;
+  display:flex; align-items:center; gap:14px;
+}
+.slide-index .num{
+  font-family:'Bebas Neue',sans-serif; font-size:15px;
+  color: var(--ink-dim); letter-spacing:.05em;
+}
+.dots{ display:flex; gap:8px; }
+.dot-btn{
+  width:26px; height:3px;
+  background: rgba(242,241,233,0.25);
+  border:none; cursor:pointer; padding:0;
+  transition: background .2s ease;
+}
+.dot-btn.active{ background: var(--flood); }
 
-  .slide-index{ position:absolute; z-index:3; left:32px; bottom:32px; display:flex; align-items:center; gap:14px; }
-  .slide-index .num{ font-family:'Bebas Neue'; font-size:15px; color:var(--ink-dim); letter-spacing:.05em; }
-  .dots{ display:flex; gap:8px; } /* FLEXBOX: dot row */
-  .dot-btn{ width:26px; height:3px; background:rgba(242,241,233,0.25); border:none; cursor:pointer; padding:0; transition:background .2s ease; }
-  .dot-btn.active{ background:var(--flood); }
-
-  .scroll-cue{ position:absolute; right:32px; bottom:32px; z-index:3; color:var(--ink-dim); font-size:12px; letter-spacing:.08em; display:flex; align-items:center; gap:10px; }
-  .scroll-cue .bar{ width:1px; height:34px; background:rgba(242,241,233,0.3); position:relative; overflow:hidden; }
-  .scroll-cue .bar::after{ content:""; position:absolute; left:0; top:-40%; width:100%; height:40%; background:var(--flood); animation:cueMove 1.8s ease-in-out infinite; }
-  @keyframes cueMove{ 0%{top:-40%} 60%{top:100%} 100%{top:100%} }
-
-  /* ==========================================================
-     TICKER STRIP — flex row that scrolls itself horizontally
-     ========================================================== */
-  .ticker-section{ background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-  .ticker{ display:flex; overflow:hidden; } /* FLEXBOX wrapper, clips the scrolling track */
-  .ticker-track{ display:flex; gap:0; animation: scrollTicker 32s linear infinite; } /* FLEXBOX: items in a single row */
-  .ticker-item{ display:flex; align-items:center; gap:16px; padding:16px 40px; white-space:nowrap; border-right:1px solid var(--line); font-size:14px; }
-  .ticker-item .tag{ font-size:10px; font-weight:700; letter-spacing:.06em; color:var(--seam); border:1px solid var(--seam); padding:2px 6px; border-radius:2px; }
-  .ticker-item b{ color:var(--ink); }
-  .ticker-item span.score{ color:var(--flood); font-family:'Bebas Neue'; font-size:16px; letter-spacing:.03em; }
-  @keyframes scrollTicker{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
-
-  /* ==========================================================
-     SHARED SECTION SHELL
-     ========================================================== */
-  section{ padding:110px 0; position:relative; }
-  .section-head{ max-width:600px; margin-bottom:56px; }
-  .kicker{ display:flex; align-items:center; gap:10px; margin-bottom:16px; color:var(--flood); font-size:13px; font-weight:600; }
-  .kicker .seam-line{ width:34px; height:1px; position:relative; }
-  .kicker .seam-line::before{ content:""; position:absolute; inset:0; background-image: repeating-linear-gradient(90deg, var(--flood) 0 3px, transparent 3px 7px); }
-  .section-title{ font-size: clamp(32px, 4vw, 52px); margin:0 0 16px 0; color:var(--ink); }
-  .section-desc{ color:var(--ink-dim); font-size:16px; line-height:1.65; }
-
-  /* ==========================================================
-     FEATURES — FLEXBOX grid-of-cards.
-     flex-wrap lets the browser decide 3 / 2 / 1 columns per row
-     based on available width, no fixed breakpoints needed.
-     ========================================================== */
-  .feature-list{
-    display:flex;           /* FLEXBOX instead of CSS grid */
-    flex-wrap:wrap;         /* cards drop to the next line as space runs out */
-    border-top:1px solid var(--line);
-    border-left:1px solid var(--line);
-  }
-  .feature{
-    flex:1 1 300px;         /* grow/shrink, but never below ~300px -> auto column count */
-    padding:34px 30px;
-    border-right:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-  }
-  .feature .f-num{ font-family:'Bebas Neue'; color:var(--seam); font-size:14px; letter-spacing:.08em; margin-bottom:18px; display:block; }
-  .feature h3{ font-size:20px; margin:0 0 10px 0; color:var(--ink); font-weight:700; }
-  .feature p{ color:var(--ink-dim); font-size:14.5px; line-height:1.6; margin:0; }
-
-  /* ==========================================================
-     LIVE MATCHES TABLE — FLEXBOX rows.
-     Each row is a flex container; columns are given a flex-basis
-     so they resize together, and wrap onto two lines on phones
-     instead of needing a separate mobile layout.
-     ========================================================== */
-  .matches{ background:var(--panel); }
-  .match-table{ border-top:1px solid var(--line); }
-  .match-row{
-    display:flex;                 /* FLEXBOX row */
-    flex-wrap:wrap;                /* allows columns to reflow on small screens */
-    align-items:center;
-    gap:14px 20px;
-    padding:22px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .match-row.head{ color:var(--ink-dim); font-size:12px; font-weight:600; letter-spacing:.04em; padding-top:0; padding-bottom:16px; }
-  .col-time{ flex:0 0 90px; }
-  .col-match{ flex:1 1 220px; }     /* takes remaining space, wraps first on narrow screens */
-  .col-venue{ flex:1 1 180px; }
-  .col-status{ flex:0 0 130px; }
-  .col-watch{ flex:0 0 110px; margin-left:auto; } /* pinned to the row's right edge via flex auto-margin */
-  .match-time{ font-family:'Bebas Neue'; font-size:18px; color:var(--flood); }
-  .match-team{ font-weight:600; font-size:15px; }
-  .match-team small{ display:block; color:var(--ink-dim); font-weight:400; font-size:12.5px; margin-top:2px; }
-  .match-status{ font-size:13px; color:var(--ink-dim); }
-  .match-status.live{ color:var(--seam); font-weight:700; display:flex; align-items:center; gap:7px; }
-  .match-status.live .dot{ width:6px; height:6px; border-radius:50%; background:var(--seam); animation:pulse 1.6s infinite; }
-
-  /* ==========================================================
-     CTA BAND — flex row that stacks on narrow screens
-     ========================================================== */
-  .cta-band{ background: linear-gradient(120deg, #10160F 0%, #131C10 100%); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-  .cta-flex{ display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap; } /* FLEXBOX: side-by-side, wraps to stacked on mobile */
-  .cta-flex h2{ font-size: clamp(28px,3.6vw,44px); margin:0; max-width:520px; color:var(--ink); }
-
-  /* ==========================================================
-     FOOTER — all flexbox: top row, column group, bottom row
-     ========================================================== */
-  footer{ padding:60px 0 40px; border-top:1px solid var(--line); }
-  .footer-top{ display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; margin-bottom:50px; }
-  .footer-cols{ display:flex; gap:70px; flex-wrap:wrap; } /* FLEXBOX: link columns wrap on narrow screens */
-  .footer-col h4{ font-size:12px; letter-spacing:.05em; color:var(--ink); margin:0 0 16px 0; }
-  .footer-col a{ display:block; color:var(--ink-dim); text-decoration:none; font-size:14px; margin-bottom:10px; }
-  .footer-col a:hover{ color:var(--ink); }
-  .footer-bottom{ display:flex; justify-content:space-between; color:var(--ink-dim); font-size:13px; flex-wrap:wrap; gap:10px; }
-
-  /* ==========================================================
-     RESPONSIVE TWEAKS — most sizing already self-adjusts via
-     flex-wrap above; these just hide the desktop nav links and
-     tidy spacing on small screens.
-     ========================================================== */
-  @media (max-width:860px){
-    nav.links{ display:none; }
-    .feature{ flex-basis:100%; } /* stack features to a single column on small screens */
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .slide{ transition:none; }
-    .ticker-track{ animation:none; }
-    .scroll-cue .bar::after{ animation:none; }
-  }
+@media (prefers-reduced-motion: reduce){
+  .slide{ transition:none; }
+}
 </style>
 </head>
 <body>
 
 <!-- =========================================================
-     NAV BAR (transparent, fixed, flexbox row)
-     ========================================================= -->
-<header class="nav" id="siteNav">
+     NAV BAR
+========================================================= -->
+<header class="nav">
   <div class="wrap nav-row">
     <div class="brand">
       <span class="brand-mark"></span>
       <span class="brand-name">CRICK <b>ON TIME</b></span>
     </div>
-    <nav class="links">
-      <a href="#matches">Live Matches</a>
-      <a href="#schedule">Schedule</a>
-    </nav>
     <div class="nav-cta">
-      <a href="#matches" class="btn btn-live"><span class="dot"></span> Live Now</a>
-      <a href="#plans" class="btn btn-primary">Start Watching</a>
+      <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary">Join for More</a>
     </div>
   </div>
 </header>
 
 <!-- =========================================================
      HERO + AUTO SLIDER
-     Each .slide contains TWO image layers:
-       .visual-landscape  (wide screens)
-       .visual-portrait   (tall/phone screens)
-     CSS media queries (orientation) decide which one is visible —
-     this happens instantly on rotate, no JS involved.
-     ========================================================= -->
+========================================================= -->
 <section class="hero" id="home">
 
   <!-- SLIDE 1 : floodlit night pitch -->
   <div class="slide active" data-slide="0">
-
-    <!-- landscape artwork: wide floodlight beams fanning from top-right -->
     <div class="visual-landscape bg-1">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <g opacity="0.5">
@@ -380,8 +234,6 @@
         <path d="M0 800 C 320 785, 680 815, 1440 785" stroke="#D6FF5C" stroke-width="1" opacity="0.18" fill="none"/>
       </svg>
     </div>
-
-    <!-- portrait artwork: beams centred, falling straight down toward the pitch -->
     <div class="visual-portrait bg-1">
       <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <g opacity="0.5">
@@ -396,14 +248,11 @@
         <path d="M0 1200 C 220 1180, 580 1230, 800 1190" stroke="#D6FF5C" stroke-width="1" opacity="0.18" fill="none"/>
       </svg>
     </div>
-
     <div class="slide-scrim"></div>
   </div>
 
   <!-- SLIDE 2 : cricket-ball seam close-up -->
   <div class="slide" data-slide="1">
-
-    <!-- landscape artwork: ball offset to the right, seam arcs sweeping wide -->
     <div class="visual-landscape bg-2">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <circle cx="1180" cy="420" r="360" fill="none" stroke="#C8102E" stroke-width="2" opacity="0.55"/>
@@ -412,8 +261,6 @@
         <circle cx="1180" cy="420" r="230" fill="none" stroke="#C8102E" stroke-width="1" opacity="0.3"/>
       </svg>
     </div>
-
-    <!-- portrait artwork: ball centred, seam arcs stacked vertically -->
     <div class="visual-portrait bg-2">
       <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <circle cx="400" cy="500" r="320" fill="none" stroke="#C8102E" stroke-width="2" opacity="0.55"/>
@@ -422,14 +269,11 @@
         <circle cx="400" cy="500" r="200" fill="none" stroke="#C8102E" stroke-width="1" opacity="0.3"/>
       </svg>
     </div>
-
     <div class="slide-scrim"></div>
   </div>
 
   <!-- SLIDE 3 : overhead pitch / crease lines -->
   <div class="slide" data-slide="2">
-
-    <!-- landscape artwork: vertical pitch lines running across a wide frame -->
     <div class="visual-landscape bg-3">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <line x1="820" y1="0" x2="820" y2="900" stroke="#F2F1E9" stroke-width="1.5" opacity="0.15"/>
@@ -442,8 +286,6 @@
         <circle cx="1180" cy="470" r="2" fill="#D6FF5C" opacity="0.5"/>
       </svg>
     </div>
-
-    <!-- portrait artwork: crease lines as horizontal bands down a tall frame -->
     <div class="visual-portrait bg-3">
       <svg class="slide-svg" viewBox="0 0 800 1400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <line x1="0" y1="460" x2="800" y2="460" stroke="#F2F1E9" stroke-width="1.5" opacity="0.15"/>
@@ -456,19 +298,17 @@
         <circle cx="380" cy="900" r="2.5" fill="#D6FF5C" opacity="0.5"/>
       </svg>
     </div>
-
     <div class="slide-scrim"></div>
   </div>
 
-  <!-- text + button overlay, shared across all slides, content swapped by JS -->
+  <!-- text + Telegram CTA overlay -->
   <div class="hero-content wrap">
     <div class="hero-inner">
       <div class="eyebrow"><span class="seam-line"></span> <span id="slideEyebrow">LIVE CRICKET, ZERO DELAY</span></div>
       <h1 class="hero-title display" id="slideTitle"></h1>
       <p class="hero-sub" id="slideSub"></p>
       <div class="hero-actions">
-        <a href="#plans" class="btn btn-primary" id="slideCta"></a>
-        <a href="#matches" class="btn btn-ghost" id="slideSecondaryCta">See What's Live</a>
+        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary">Join for More</a>
       </div>
     </div>
   </div>
@@ -481,199 +321,50 @@
       <button class="dot-btn" data-goto="2" aria-label="Slide 3"></button>
     </div>
   </div>
-
-  <div class="scroll-cue"><span class="bar"></span> SCROLL</div>
 </section>
-
-<!-- =========================================================
-     LIVE SCORE TICKER — flex row, auto-scrolls via CSS animation
-     ========================================================= -->
-<div class="ticker-section">
-  <div class="ticker">
-    <div class="ticker-track" id="tickerTrack">
-      <!-- populated by JS, duplicated for a seamless loop -->
-    </div>
-  </div>
-</div>
-
-<!-- =========================================================
-     LIVE MATCHES — flexbox rows, columns reflow on small screens
-     ========================================================= -->
-<section class="matches" id="matches">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="kicker"><span class="seam-line"></span> ON AIR TODAY</div>
-      <h2 class="section-title display">Matches live &amp; up next</h2>
-    </div>
-    <div class="match-table">
-      <div class="match-row head">
-        <div class="col-time">Time</div>
-        <div class="col-match">Match</div>
-        <div class="col-venue">Venue</div>
-        <div class="col-status">Status</div>
-        <div class="col-watch">Watch</div>
-      </div>
-      <div id="matchRows"></div>
-    </div>
-      <div class="match-row">
-        <div class="col-time match-time">18:30</div>
-        <div class="col-match match-team">England <small>vs South Africa · Test, Day 3</small></div>
-        <div class="col-venue match-status">Lord's, London</div>
-        <div class="col-status match-status">Starts in 2h 10m</div>
-        <div class="col-watch"><a href="#plans" class="btn btn-ghost" style="padding:9px 16px;font-size:13px;">Remind Me</a></div>
-      </div>
-      <div class="match-row">
-        <div class="col-time match-time">21:00</div>
-        <div class="col-match match-team">Titans <small>vs Falcons · League T20</small></div>
-        <div class="col-venue match-status">Kensington Oval</div>
-        <div class="col-status match-status">Starts in 4h 40m</div>
-        <div class="col-watch"><a href="#plans" class="btn btn-ghost" style="padding:9px 16px;font-size:13px;">Remind Me</a></div>
-      </div>
-      <div class="match-row">
-        <div class="col-time match-time">Tomorrow</div>
-        <div class="col-match match-team">Pakistan <small>vs New Zealand · 1st T20I</small></div>
-        <div class="col-venue match-status">Gaddafi Stadium</div>
-        <div class="col-status match-status">09:30 IST</div>
-        <div class="col-watch"><a href="#plans" class="btn btn-ghost" style="padding:9px 16px;font-size:13px;">Remind Me</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-     CTA BAND — flex row, stacks vertically on narrow screens
-     ========================================================= -->
-<section class="cta-band" id="plans">
-  <div class="wrap">
-    <div class="cta-flex">
-      <h2 class="display">Your first live match<br>is free. On us.</h2>
-      <a href="#" class="btn btn-primary" style="padding:16px 30px;font-size:15px;">Create Free Account</a>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-     FOOTER — flexbox top row + flexbox link columns
-     ========================================================= -->
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="brand">
-        <span class="brand-mark"></span>
-        <span class="brand-name">CRICK <b>ON TIME</b></span>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4>WATCH</h4>
-          <a href="#matches">Live Matches</a>
-          <a href="#schedule">Full Schedule</a>
-          <a href="#">Highlights</a>
-        </div>
-        <div class="footer-col">
-          <h4>PLANS</h4>
-          <a href="#plans">Pricing</a>
-          <a href="#">Student Plan</a>
-          <a href="#">Gift a Pass</a>
-        </div>
-        <div class="footer-col">
-          <h4>SUPPORT</h4>
-          <a href="#">Help Centre</a>
-          <a href="#">Stream Issues</a>
-          <a href="#">Contact</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Crick On Time. All matches streamed under licensed broadcast rights.</span>
-      <span>Made for the fan who checks the score before the alarm.</span>
-    </div>
-  </div>
-</footer>
 
 <script>
-  /* ---- Nav ---- */
-  const navEl = document.getElementById('siteNav');
-  window.addEventListener('scroll', () => {
-    navEl.classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
+  /* ---- Slider content (hardcoded, no JSON needed) ---- */
+  const slideContent = [
+    {
+      eyebrow: 'LIVE CRICKET, ZERO DELAY',
+      title: 'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>',
+      sub: 'Stream every international and T20 league match in crisp HD. Join our Telegram channel and get live links the moment play begins.'
+    },
+    {
+      eyebrow: 'HD STREAMS, EVERY MATCH',
+      title: 'No Buffer.<br>No Blackout.<br><span class="accent">All Matches.</span>',
+      sub: 'From the first over to the final ball — working stream links for every game, delivered straight to your phone.'
+    },
+    {
+      eyebrow: 'JOIN FREE, WATCH INSTANTLY',
+      title: 'Your Team.<br>Live Now.<br><span class="accent">Tap Join.</span>',
+      sub: 'No sign-ups, no paywalls. Join the channel and never miss a single match again.'
+    }
+  ];
 
-  /* ---- JSON-driven hero + matches ---- */
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot-btn');
   const slideNum = document.querySelector('.slide-index .num');
   const titleEl = document.getElementById('slideTitle');
   const subEl = document.getElementById('slideSub');
   const eyebrowEl = document.getElementById('slideEyebrow');
-  const ctaEl = document.getElementById('slideCta');
-  const secondaryCtaEl = document.getElementById('slideSecondaryCta');
-  const matchRowsEl = document.getElementById('matchRows');
 
-  let content = [];
   let current = 0;
   let timer;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function applySlideImages(slideData){
-    slides.forEach((slide, index) => {
-      const item = slideData[index];
-      if (!item) return;
-
-      const landscape = slide.querySelector('.visual-landscape');
-      const portrait = slide.querySelector('.visual-portrait');
-
-      if (item.landscapeImage) {
-        landscape.style.backgroundImage = `url("${item.landscapeImage}")`;
-        landscape.style.backgroundSize = 'cover';
-        landscape.style.backgroundPosition = 'center';
-      }
-
-      if (item.portraitImage) {
-        portrait.style.backgroundImage = `url("${item.portraitImage}")`;
-        portrait.style.backgroundSize = 'cover';
-        portrait.style.backgroundPosition = 'center';
-      }
-    });
-  }
-
-  function renderMatches(matches){
-    matchRowsEl.innerHTML = matches.map(match => `
-      <div class="match-row">
-        <div class="col-time match-time">${match.time}</div>
-        <div class="col-match match-team">${match.teams} <small>${match.details}</small></div>
-        <div class="col-venue match-status">${match.venue}</div>
-        <div class="col-status match-status ${match.statusType === 'live' ? 'live' : ''}">
-          ${match.statusType === 'live' ? '<span class="dot"></span>' : ''} ${match.status}
-        </div>
-        <div class="col-watch">
-          <a href="${match.actionHref}" class="btn ${match.statusType === 'live' ? 'btn-primary' : 'btn-ghost'}" style="padding:9px 16px;font-size:13px;">
-            ${match.actionText}
-          </a>
-        </div>
-      </div>
-    `).join('');
-  }
-
   function goTo(i){
     slides[current].classList.remove('active');
     dots[current].classList.remove('active');
-
     current = i;
-
     slides[current].classList.add('active');
     dots[current].classList.add('active');
 
-    slideNum.textContent =
-      '0' + (current + 1) + ' / ' + String(content.length).padStart(2, '0');
-
-    eyebrowEl.textContent = window.crickOnTimeContent.hero.eyebrow;
-    titleEl.innerHTML = content[current].titleHtml;
-    subEl.textContent = content[current].subtitle;
-
-    ctaEl.textContent = content[current].ctaText;
-    ctaEl.href = content[current].ctaHref;
-
-    secondaryCtaEl.textContent = content[current].secondaryCtaText;
-    secondaryCtaEl.href = content[current].secondaryCtaHref;
+    slideNum.textContent = '0' + (current + 1) + ' / 03';
+    eyebrowEl.textContent = slideContent[current].eyebrow;
+    titleEl.innerHTML = slideContent[current].title;
+    subEl.textContent = slideContent[current].sub;
   }
 
   function next(){
@@ -682,7 +373,7 @@
 
   function startAuto(){
     if (reduceMotion) return;
-    timer = setInterval(next, window.crickOnTimeContent.hero.autoPlayMs || 5500);
+    timer = setInterval(next, 5500);
   }
 
   function stopAuto(){
@@ -697,55 +388,9 @@
     });
   });
 
-  /* ---- Ticker ---- */
-  const tickerData = [
-    { tag:'LIVE', text:'India vs Australia', score:'IND 214/4 (34.2)' },
-    { tag:'T20', text:'Titans vs Falcons', score:'Starts 21:00' },
-    { tag:'TEST', text:'England vs South Africa', score:'Day 3 · 18:30' },
-    { tag:'ODI', text:'Pakistan vs New Zealand', score:'Tomorrow 09:30' },
-    { tag:'LIVE', text:'Big Bash: Sixers vs Stars', score:'SIX 88/2 (11.4)' }
-  ];
-
-  const track = document.getElementById('tickerTrack');
-
-  function buildTicker(){
-    const tickerHtml = tickerData.map(d =>
-      `<div class="ticker-item"><span class="tag">${d.tag}</span><b>${d.text}</b><span class="score">${d.score}</span></div>`
-    ).join('');
-
-    track.innerHTML = tickerHtml + tickerHtml;
-  }
-
-  fetch('crick-on-time-content.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Could not load crick-on-time-content.json');
-      }
-      return response.json();
-    })
-    .then(data => {
-      window.crickOnTimeContent = data;
-      content = data.hero.slides || [];
-
-      applySlideImages(content);
-      renderMatches(data.matches || []);
-      goTo(0);
-      buildTicker();
-      startAuto();
-    })
-    .catch(error => {
-      console.error(error);
-
-      titleEl.innerHTML =
-        'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>';
-
-      subEl.textContent =
-        'Content could not be loaded. Make sure crick-on-time-content.json is in the same folder as this HTML file.';
-
-      ctaEl.textContent = 'Start Watching Free';
-      buildTicker();
-    });
-
+  /* init first slide text */
+  goTo(0);
+  startAuto();
 </script>
 
 </body>
