@@ -18,10 +18,8 @@
   --seam:#C8102E;
   --flood:#D6FF5C;
   --line: rgba(242,241,233,0.14);
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-*, *::before, *::after{ box-sizing: inherit; }
+*, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; }
 html, body{ height:100%; }
 body{
@@ -42,6 +40,17 @@ header.nav{
   position:fixed; top:0; left:0; right:0; z-index:100;
   padding-top: env(safe-area-inset-top, 0px);
   background: linear-gradient(to bottom, rgba(6,9,7,0.65), rgba(6,9,7,0));
+  transition: background .4s ease, backdrop-filter .4s ease, box-shadow .4s ease;
+}
+header.nav.scrolled{
+  background: rgba(9,13,10,0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 var(--line);
+}
+.nav-row{
+  display:flex; align-items:center; justify-content:space-between;
+  height:78px;
 }
 .brand{ display:flex; align-items:center; gap:10px; }
 .brand-mark{
@@ -58,11 +67,6 @@ header.nav{
 .brand-mark::after{ clip-path: inset(0 0 0 50%); transform: rotate(35deg); }
 .brand-name{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.06em; color: var(--ink); }
 .brand-name b{ color: var(--flood); font-weight:400; }
-
-.nav-row{
-  display:flex; align-items:center; justify-content:space-between;
-  height:78px;
-}
 .nav-cta{ display:flex; align-items:center; gap:14px; }
 
 .btn{
@@ -111,7 +115,7 @@ header.nav{
   }
 }
 
-/* landscape background fills */
+/* gradient fills (used when no image is supplied via JSON) */
 .bg-1.visual-landscape{
   background:
     radial-gradient(1100px 600px at 78% -10%, rgba(214,255,92,0.16), transparent 60%),
@@ -128,7 +132,6 @@ header.nav{
     radial-gradient(900px 500px at 15% 100%, rgba(214,255,92,0.10), transparent 60%),
     linear-gradient(180deg, #0A130D 0%, #0D1712 60%, #0A0E0C 100%);
 }
-/* portrait background fills */
 .bg-1.visual-portrait{
   background:
     radial-gradient(700px 500px at 50% -5%, rgba(214,255,92,0.18), transparent 60%),
@@ -191,6 +194,11 @@ header.nav{
 }
 .dot-btn.active{ background: var(--flood); }
 
+@media (max-width:860px){
+  .wrap{ padding:0 20px; }
+  .slide-index{ left:20px; bottom:24px; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .slide{ transition:none; }
 }
@@ -201,7 +209,7 @@ header.nav{
 <!-- =========================================================
      NAV BAR
 ========================================================= -->
-<header class="nav">
+<header class="nav" id="siteNav">
   <div class="wrap nav-row">
     <div class="brand">
       <span class="brand-mark"></span>
@@ -218,7 +226,7 @@ header.nav{
 ========================================================= -->
 <section class="hero" id="home">
 
-  <!-- SLIDE 1 : floodlit night pitch -->
+  <!-- SLIDE 1 -->
   <div class="slide active" data-slide="0">
     <div class="visual-landscape bg-1">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -251,7 +259,7 @@ header.nav{
     <div class="slide-scrim"></div>
   </div>
 
-  <!-- SLIDE 2 : cricket-ball seam close-up -->
+  <!-- SLIDE 2 -->
   <div class="slide" data-slide="1">
     <div class="visual-landscape bg-2">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -272,7 +280,7 @@ header.nav{
     <div class="slide-scrim"></div>
   </div>
 
-  <!-- SLIDE 3 : overhead pitch / crease lines -->
+  <!-- SLIDE 3 -->
   <div class="slide" data-slide="2">
     <div class="visual-landscape bg-3">
       <svg class="slide-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -301,14 +309,14 @@ header.nav{
     <div class="slide-scrim"></div>
   </div>
 
-  <!-- text + Telegram CTA overlay -->
+  <!-- text overlay — content comes from crick-on-time-content.json -->
   <div class="hero-content wrap">
     <div class="hero-inner">
       <div class="eyebrow"><span class="seam-line"></span> <span id="slideEyebrow">LIVE CRICKET, ZERO DELAY</span></div>
       <h1 class="hero-title display" id="slideTitle"></h1>
       <p class="hero-sub" id="slideSub"></p>
       <div class="hero-actions">
-        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary">Join for More</a>
+        <a href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener" class="btn btn-primary" id="slideCta">Join for More</a>
       </div>
     </div>
   </div>
@@ -324,56 +332,105 @@ header.nav{
 </section>
 
 <script>
-  /* ---- Slider content (hardcoded, no JSON needed) ---- */
-  const slideContent = [
+  /* =====================================================
+     TELEGRAM LINK — used for the hero CTA on every slide
+  ====================================================== */
+  const TELEGRAM_URL = 'https://t.me/+u4SlkLZNQl9hZjQ1';
+  const TELEGRAM_TEXT = 'Join for More';
+
+  /* ---- Fallback content (shown if the JSON fails to load) ---- */
+  const DEFAULT_SLIDES = [
     {
       eyebrow: 'LIVE CRICKET, ZERO DELAY',
-      title: 'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>',
-      sub: 'Stream every international and T20 league match in crisp HD. Join our Telegram channel and get live links the moment play begins.'
+      titleHtml: 'Every Ball.<br>Every Match.<br><span class="accent">On Time.</span>',
+      subtitle: 'Stream every international and T20 league match in crisp HD. Join our Telegram channel and get live links the moment play begins.'
     },
     {
       eyebrow: 'HD STREAMS, EVERY MATCH',
-      title: 'No Buffer.<br>No Blackout.<br><span class="accent">All Matches.</span>',
-      sub: 'From the first over to the final ball — working stream links for every game, delivered straight to your phone.'
+      titleHtml: 'No Buffer.<br>No Blackout.<br><span class="accent">All Matches.</span>',
+      subtitle: 'From the first over to the final ball — working stream links for every game, delivered straight to your phone.'
     },
     {
       eyebrow: 'JOIN FREE, WATCH INSTANTLY',
-      title: 'Your Team.<br>Live Now.<br><span class="accent">Tap Join.</span>',
-      sub: 'No sign-ups, no paywalls. Join the channel and never miss a single match again.'
+      titleHtml: 'Your Team.<br>Live Now.<br><span class="accent">Tap Join.</span>',
+      subtitle: 'No sign-ups, no paywalls. Join the channel and never miss a single match again.'
     }
   ];
 
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot-btn');
-  const slideNum = document.querySelector('.slide-index .num');
-  const titleEl = document.getElementById('slideTitle');
-  const subEl = document.getElementById('slideSub');
+  const slides    = document.querySelectorAll('.slide');
+  const dots      = document.querySelectorAll('.dot-btn');
+  const slideNum  = document.querySelector('.slide-index .num');
+  const titleEl   = document.getElementById('slideTitle');
+  const subEl     = document.getElementById('slideSub');
   const eyebrowEl = document.getElementById('slideEyebrow');
+  const ctaEl     = document.getElementById('slideCta');
 
+  let content = DEFAULT_SLIDES;
   let current = 0;
-  let timer;
+  let timer   = null;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---- apply JSON images to each slide (landscape + portrait) ---- */
+  function applySlideImages(slideData){
+    slides.forEach((slide, index) => {
+      const item = slideData[index];
+      if (!item) return;
+
+      const landscape = slide.querySelector('.visual-landscape');
+      const portrait  = slide.querySelector('.visual-portrait');
+
+      if (item.landscapeImage) {
+        landscape.style.backgroundImage = `url("${item.landscapeImage}")`;
+        landscape.style.backgroundSize  = 'cover';
+        landscape.style.backgroundPosition = 'center';
+        const svg = landscape.querySelector('svg');
+        if (svg) svg.style.display = 'none';
+      }
+
+      if (item.portraitImage) {
+        portrait.style.backgroundImage = `url("${item.portraitImage}")`;
+        portrait.style.backgroundSize  = 'cover';
+        portrait.style.backgroundPosition = 'center';
+        const svg = portrait.querySelector('svg');
+        if (svg) svg.style.display = 'none';
+      }
+    });
+  }
+
+  /* ---- render a slide's text content ---- */
   function goTo(i){
     slides[current].classList.remove('active');
     dots[current].classList.remove('active');
+
     current = i;
+
     slides[current].classList.add('active');
     dots[current].classList.add('active');
 
-    slideNum.textContent = '0' + (current + 1) + ' / 03';
-    eyebrowEl.textContent = slideContent[current].eyebrow;
-    titleEl.innerHTML = slideContent[current].title;
-    subEl.textContent = slideContent[current].sub;
+    slideNum.textContent =
+      '0' + (current + 1) + ' / ' + String(slides.length).padStart(2, '0');
+
+    const slide = content[current] || {};
+
+    eyebrowEl.textContent = slide.eyebrow || 'LIVE CRICKET, ZERO DELAY';
+    titleEl.innerHTML     = slide.titleHtml || slide.title || DEFAULT_SLIDES[current % DEFAULT_SLIDES.length].titleHtml;
+    subEl.textContent     = slide.subtitle || slide.sub || DEFAULT_SLIDES[current % DEFAULT_SLIDES.length].subtitle;
+
+    /* hero CTA always points to the Telegram channel */
+    ctaEl.textContent = slide.ctaText || TELEGRAM_TEXT;
+    ctaEl.href        = TELEGRAM_URL;
+    ctaEl.target      = '_blank';
+    ctaEl.rel         = 'noopener';
   }
 
   function next(){
     goTo((current + 1) % slides.length);
   }
 
-  function startAuto(){
+  function startAuto(ms){
     if (reduceMotion) return;
-    timer = setInterval(next, 5500);
+    stopAuto();
+    timer = setInterval(next, ms || 5500);
   }
 
   function stopAuto(){
@@ -388,9 +445,41 @@ header.nav{
     });
   });
 
-  /* init first slide text */
+  /* show fallback immediately, then upgrade if JSON loads */
   goTo(0);
-  startAuto();
+  startAuto(5500);
+
+  /* =====================================================
+     FETCH HERO CONTENT FROM crick-on-time-content.json
+  ====================================================== */
+  fetch('crick-on-time-content.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Could not load crick-on-time-content.json (status ' + response.status + ')');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const hero = data.hero || {};
+      const jsonSlides = Array.isArray(hero.slides) ? hero.slides : [];
+
+      if (jsonSlides.length) {
+        content = jsonSlides.map((s, i) => ({
+          eyebrow:   s.eyebrow   || hero.eyebrow || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].eyebrow,
+          titleHtml: s.titleHtml || s.title      || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].titleHtml,
+          subtitle:  s.subtitle  || s.sub        || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].subtitle,
+          landscapeImage: s.landscapeImage,
+          portraitImage:  s.portraitImage
+        }));
+
+        applySlideImages(content);
+        goTo(0);
+        startAuto(hero.autoPlayMs || 5500);
+      }
+    })
+    .catch(error => {
+      console.warn('Using fallback hero content:', error.message);
+    });
 </script>
 
 </body>
