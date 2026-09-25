@@ -105,6 +105,62 @@
     .wrap{ padding:14px; }
     nav.links{ display:none; }
   }
+
+  /* ==========================================================
+     TELEGRAM POPUP — modal overlay, shown periodically
+     ========================================================== */
+  .tg-overlay{
+    position:fixed; inset:0; z-index:1000;
+    background:rgba(6,9,7,0.72);
+    backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; /* FLEXBOX: center the card */
+    padding:20px;
+    opacity:0; pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .tg-overlay.show{ opacity:1; pointer-events:auto; }
+
+  .tg-card{
+    width:100%; max-width:360px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:26px 24px 24px;
+    text-align:center;
+    box-shadow:0 24px 70px rgba(0,0,0,0.55);
+    transform:translateY(8px) scale(.98);
+    transition:transform .25s ease;
+  }
+  .tg-overlay.show .tg-card{ transform:translateY(0) scale(1); }
+
+  .tg-icon{
+    width:56px; height:56px; margin:0 auto 14px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2AABEE,#229ED9);
+    display:flex; align-items:center; justify-content:center; /* FLEXBOX: center paper-plane glyph */
+  }
+  .tg-icon svg{ width:28px; height:28px; fill:#fff; }
+
+  .tg-title{ font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.03em; color:var(--ink); margin:0 0 6px; }
+  .tg-sub{ font-size:14px; color:var(--ink-dim); margin:0 0 20px; line-height:1.5; }
+
+  .tg-join{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; /* FLEXBOX: icon + label on the button */
+    width:100%; padding:13px 18px;
+    background:var(--flood); color:#0A0E0C;
+    font-weight:700; font-size:14px; text-decoration:none;
+    border-radius:10px; letter-spacing:0.02em;
+    transition:filter .15s ease;
+  }
+  .tg-join:hover{ filter:brightness(1.08); }
+
+  .tg-dismiss{
+    margin-top:12px;
+    background:none; border:0; cursor:pointer;
+    color:var(--ink-dim); font-size:13px;
+    font-family:inherit;
+  }
+  .tg-dismiss:hover{ color:var(--ink); }
 </style>
 </head>
 
@@ -159,6 +215,21 @@
 
 </div>
 
+<!-- =========================================================
+     TELEGRAM JOIN POPUP — hidden by default, toggled by JS
+     ========================================================= -->
+<div class="tg-overlay" id="tgOverlay">
+  <div class="tg-card">
+    <div class="tg-icon">
+      <svg viewBox="0 0 24 24"><path d="M21.05 2.93 2.3 10.4c-1.24.5-1.23 1.2-.23 1.5l4.8 1.5 1.85 5.62c.22.6.4.85.8.85.35 0 .5-.16.7-.35l1.9-1.83 4.7 3.47c.9.5 1.5.24 1.75-.83l3.15-14.85c.36-1.32-.5-1.9-1.62-1.55Z"/></svg>
+    </div>
+    <h3 class="tg-title">Join Us on Telegram</h3>
+    <p class="tg-sub">Get instant match alerts, backup stream links &amp; updates straight from our channel.</p>
+    <a class="tg-join" href="https://t.me/+u4SlkLZNQl9hZjQ1" target="_blank" rel="noopener">Join Telegram Channel</a>
+    <button class="tg-dismiss" id="tgDismiss">Maybe later</button>
+  </div>
+</div>
+
 <script>
   /* ---- Loading overlay: hide once the iframe reports it has loaded ---- */
   const frame = document.getElementById("streamFrame");
@@ -167,6 +238,27 @@
   frame.addEventListener("load", () => {
     loading.classList.add("hidden");
   });
+
+  /* ---- Telegram join popup: show on load, then every 40 minutes ---- */
+  const TG_INTERVAL_MS = 40 * 60 * 1000; // 40 minutes
+  const tgOverlay = document.getElementById("tgOverlay");
+  const tgDismiss = document.getElementById("tgDismiss");
+
+  function showTgPopup(){
+    tgOverlay.classList.add("show");
+  }
+  function hideTgPopup(){
+    tgOverlay.classList.remove("show");
+  }
+
+  tgDismiss.addEventListener("click", hideTgPopup);
+  tgOverlay.addEventListener("click", (e) => {
+    if (e.target === tgOverlay) hideTgPopup(); // click outside card closes it
+  });
+
+  // Show once shortly after page load, then repeat every 40 minutes.
+  setTimeout(showTgPopup, 3000);
+  setInterval(showTgPopup, TG_INTERVAL_MS);
 </script>
 
 </body>
