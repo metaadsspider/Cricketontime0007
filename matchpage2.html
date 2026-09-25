@@ -1,173 +1,173 @@
-\<!doctype html>
-\<html lang="en">
-\<head>
-\<meta charset="utf-8">
-\<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-\<title>Crick On Time — Live Player\</title>
-\<link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-\<link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-\<link href="[https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter\:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Bebas+Neue\&family=Inter\:wght@400;500;600;700;800\&display=swap)" rel="stylesheet">
-\<style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Crick On Time — Live Player</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
 
-  /\* ==========================================================
+  /* ==========================================================
      DESIGN TOKENS — same palette/type as the Crick On Time
      homepage, so this player page reads as part of one site.
-     \========================================================== \*/
-  \:root{
-    \--void:#0A0E0C;         /\* page background \*/
-    \--panel:#10160F;        /\* card / shell background \*/
-    \--panel-2:#161D14;      /\* slightly lighter panel shade \*/
-    \--ink:#F2F1E9;          /\* primary text \*/
-    \--ink-dim:#9AA79C;      /\* muted / secondary text \*/
-    \--seam:#C8102E;         /\* cricket-ball red — used for LIVE indicators \*/
-    \--flood:#D6FF5C;        /\* floodlight lime — primary accent / CTAs \*/
-    \--line: rgba(242,241,233,0.14); /\* hairline borders \*/
-    box-sizing\:border-box;
+     ========================================================== */
+  :root{
+    --void:#0A0E0C;         /* page background */
+    --panel:#10160F;        /* card / shell background */
+    --panel-2:#161D14;      /* slightly lighter panel shade */
+    --ink:#F2F1E9;          /* primary text */
+    --ink-dim:#9AA79C;      /* muted / secondary text */
+    --seam:#C8102E;         /* cricket-ball red — used for LIVE indicators */
+    --flood:#D6FF5C;        /* floodlight lime — primary accent / CTAs */
+    --line: rgba(242,241,233,0.14); /* hairline borders */
+    box-sizing:border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  \*,\*::before,\*::after{ box-sizing\:inherit; }
+  *,*::before,*::after{ box-sizing:inherit; }
   html{ scroll-padding-top: env(safe-area-inset-top, 0px); }
   body{
     margin:0;
     min-height:100vh;
-    color\:var(--ink);
+    color:var(--ink);
     font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     background:
       radial-gradient(1100px 600px at 85% -10%, rgba(214,255,92,0.08), transparent 60%),
       radial-gradient(700px 500px at 95% 10%, rgba(200,16,46,0.10), transparent 60%),
       var(--void);
   }
-  .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.01em; line-height:0.95; } /\* broadcast/scoreboard display type, matches homepage \*/
-  .wrap{ max-width:1180px; margin\:auto; padding:20px; }
+  .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.01em; line-height:0.95; } /* broadcast/scoreboard display type, matches homepage */
+  .wrap{ max-width:1180px; margin:auto; padding:20px; }
 
-  /\* ==========================================================
+  /* ==========================================================
      HEADER — flexbox row: brand left, links center, live badge
      right. Same component shapes as the homepage nav.
-     \========================================================== \*/
+     ========================================================== */
   header{
-    display\:flex; align-items\:center; justify-content\:space-between;
+    display:flex; align-items:center; justify-content:space-between;
     gap:20px; padding:22px 0 22px; border-bottom:1px solid var(--line);
   }
-  .brand{ display\:flex; align-items\:center; gap:10px; } /\* FLEXBOX: logo dot + wordmark \*/
+  .brand{ display:flex; align-items:center; gap:10px; } /* FLEXBOX: logo dot + wordmark */
   .brand-mark{
     width:16px; height:16px; border-radius:50%;
-    background: var(--seam); position\:relative; flex\:none;
+    background: var(--seam); position:relative; flex:none;
   }
-  .brand-mark::before,.brand-mark::after{ /\* seam-stitch curves on the logo dot \*/
-    content:""; position\:absolute; inset:2px;
+  .brand-mark::before,.brand-mark::after{ /* seam-stitch curves on the logo dot */
+    content:""; position:absolute; inset:2px;
     border:1px solid rgba(242,241,233,0.85);
     border-radius:50%;
     clip-path: inset(0 50% 0 0);
   }
-  .brand-mark::after{ clip-path: inset(0 0 0 50%); transform\:rotate(35deg); }
-  .brand-name{ font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.06em; color\:var(--ink); }
-  .brand-name b{ color\:var(--flood); font-weight:400; }
+  .brand-mark::after{ clip-path: inset(0 0 0 50%); transform:rotate(35deg); }
+  .brand-name{ font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.06em; color:var(--ink); }
+  .brand-name b{ color:var(--flood); font-weight:400; }
 
-  nav.links{ display\:flex; gap:28px; } /\* FLEXBOX: nav link row, hidden on small screens \*/
-  nav.links a{ color\:var(--ink-dim); text-decoration\:none; font-size:14px; font-weight:500; transition\:color .2s ease; }
-  nav.links a\:hover{ color\:var(--ink); }
+  nav.links{ display:flex; gap:28px; } /* FLEXBOX: nav link row, hidden on small screens */
+  nav.links a{ color:var(--ink-dim); text-decoration:none; font-size:14px; font-weight:500; transition:color .2s ease; }
+  nav.links a:hover{ color:var(--ink); }
 
   .badge{
-    display\:inline-flex; align-items\:center; gap:8px; /\* FLEXBOX: pulsing dot + label \*/
+    display:inline-flex; align-items:center; gap:8px; /* FLEXBOX: pulsing dot + label */
     border:1px solid var(--seam); border-radius:999px;
-    padding:7px 14px; font-size:12px; font-weight:700; color\:var(--ink);
+    padding:7px 14px; font-size:12px; font-weight:700; color:var(--ink);
   }
-  .badge .dot{ width:7px; height:7px; border-radius:50%; background\:var(--seam); animation\:pulse 1.6s infinite; }
+  .badge .dot{ width:7px; height:7px; border-radius:50%; background:var(--seam); animation:pulse 1.6s infinite; }
   @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
 
-  /\* ==========================================================
+  /* ==========================================================
      PLAYER SHELL — the video stage + control bar
-     \========================================================== \*/
+     ========================================================== */
   .player-shell{
     margin-top:28px; background:#060907;
     border:1px solid var(--line); border-radius:14px;
-    overflow\:hidden; box-shadow:0 24px 70px rgba(0,0,0,0.5);
+    overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,0.5);
   }
-  .stage{ position\:relative; width:100%; aspect-ratio:16/9; background:#000; overflow\:hidden; }
-  .stage iframe{ width:100%; height:100%; display\:block; border:0; background:#000; }
+  .stage{ position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; }
+  .stage iframe{ width:100%; height:100%; display:block; border:0; background:#000; }
 
   .loading{
-    position\:absolute; inset:0;
-    display\:flex; align-items\:center; justify-content\:center; flex-direction\:column; gap:12px; /\* FLEXBOX: spinner + label, centered \*/
-    background:#06090A; color\:var(--ink); z-index:2;
-    pointer-events\:none; transition\:opacity .35s ease;
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; /* FLEXBOX: spinner + label, centered */
+    background:#06090A; color:var(--ink); z-index:2;
+    pointer-events:none; transition:opacity .35s ease;
   }
   .loading.hidden{ opacity:0; }
   .spinner{
     width:34px; height:34px; border:3px solid #26332D;
-    border-top-color\:var(--flood); border-radius:50%;
-    animation\:spin .8s linear infinite;
+    border-top-color:var(--flood); border-radius:50%;
+    animation:spin .8s linear infinite;
   }
-  @keyframes spin{ to{ transform\:rotate(360deg); } }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 
   @media (max-width:800px){
     .wrap{ padding:14px; }
-    nav.links{ display\:none; }
+    nav.links{ display:none; }
   }
-\</style>
-\</head>
+</style>
+</head>
 
-\<body>
-\<div class="wrap">
+<body>
+<div class="wrap">
 
-  \<!-- =========================================================
+  <!-- =========================================================
        HEADER — flexbox: brand, nav links, live badge
-       \========================================================= -->
-  \<header>
-    \<div class="brand">
-      \<span class="brand-mark">\</span>
-      \<span class="brand-name">CRICK \<b>ON TIME\</b>\</span>
-    \</div>
+       ========================================================= -->
+  <header>
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <span class="brand-name">CRICK <b>ON TIME</b></span>
+    </div>
 
-    \<nav class="links">
-      \<a href="#">Live Matches\</a>
-      \<a href="#">Schedule\</a>
-      \<a href="#">Highlights\</a>
-    \</nav>
+    <nav class="links">
+      <a href="#">Live Matches</a>
+      <a href="#">Schedule</a>
+      <a href="#">Highlights</a>
+    </nav>
 
-    \<div class="badge">
-      \<span class="dot">\</span>
+    <div class="badge">
+      <span class="dot"></span>
       LIVE NOW
-    \</div>
-  \</header>
+    </div>
+  </header>
 
-  \<!-- =========================================================
+  <!-- =========================================================
        PLAYER SHELL — video stage + control bar
-       \========================================================= -->
-  \<section class="player-shell">
+       ========================================================= -->
+  <section class="player-shell">
 
-    \<div class="stage">
+    <div class="stage">
 
-      \<div class="loading" id="loading">
-        \<div class="spinner">\</div>
-        \<div>Loading live stream…\</div>
-      \</div>
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>Loading live stream…</div>
+      </div>
 
-      \<iframe
+      <iframe
         id="streamFrame"
-        src="[https://asian-games.yashublitzz.workers.dev/](https://asian-games.yashublitzz.workers.dev/)"
+        src="https://asian-games.yashublitzz.workers.dev/"
         title="Live Cricket Stream"
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
         allowfullscreen
         referrerpolicy="no-referrer">
-      \</iframe>
+      </iframe>
 
-    \</div>
+    </div>
 
-  \</section>
+  </section>
 
-\</div>
+</div>
 
-\<script>
-  /\* ---- Loading overlay: hide once the iframe reports it has loaded ---- \*/
+<script>
+  /* ---- Loading overlay: hide once the iframe reports it has loaded ---- */
   const frame = document.getElementById("streamFrame");
   const loading = document.getElementById("loading");
 
   frame.addEventListener("load", () => {
     loading.classList.add("hidden");
   });
-\</script>
+</script>
 
-\</body>
-\</html> code like this no one can find the embed link and also m3u8 link playing in it with any extesnison or any other thinnk
+</body>
+</html>
